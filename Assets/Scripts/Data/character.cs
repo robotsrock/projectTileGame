@@ -8,12 +8,14 @@ public class character
 	string name;
 	float moveSpeed;
 	Action<character> onMoveCB;
+	world parentWorld;
 
-	public character(Vector2 position, string name, float moveSpeed)
+	public character(Vector2 position, string name, float moveSpeed, world theWorld)
 	{
 		this.position = position;
 		this.name = name;
 		this.moveSpeed = moveSpeed;
+		this.parentWorld = theWorld;
 	}
 	public void moveChar(Vector2 dir)
 	{

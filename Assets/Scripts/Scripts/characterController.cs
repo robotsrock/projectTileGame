@@ -12,6 +12,7 @@ public class characterController : MonoBehaviour
 	character mainChar;
 	GameObject mainCharGO;
 	Vector2 lastMoveDir;
+	public bool isBlocked { get; set; }
 	// Use this for initialization
 	void Start ()
 	{
@@ -28,11 +29,14 @@ public class characterController : MonoBehaviour
 	{
 		Vector2 moveDir;
 		moveDir = new Vector2(inputManager.instance.getAxis("horizontal"), inputManager.instance.getAxis("vertical"));
-		this.mainChar.moveChar(moveDir);
 		if (moveDir != Vector2.zero)
 		{
 			this.lastMoveDir = moveDir;
 			this.mainCharGO.transform.rotation = Quaternion.Euler(new Vector3(0, 0, Mathf.Atan2(lastMoveDir.y, lastMoveDir.x) * Mathf.Rad2Deg));
 		}
-	}
+		if (!isBlocked)
+		{
+			this.mainChar.moveChar(moveDir);
+		}
+    }
 }

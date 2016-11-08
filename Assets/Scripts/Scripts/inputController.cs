@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class inputController : MonoBehaviour {
+public class inputController : MonoBehaviour { // REFACTOR this should be split into multiple files
 
 	[Header("Variables")]
 	public float scaleFactor = 10f;
@@ -12,6 +12,8 @@ public class inputController : MonoBehaviour {
 	public float minCameraSize = 3f;
 	public float zoomRate = 1f;
 	public bool useGamePad = false;
+	public int placeMode; // 0 is place "Stone", 1 is place wall 
+						  // TODO change this so we place either tile or object
 	[Header("Objects")]
 	[Space(5)]
 	public Camera mainCamera;
@@ -125,12 +127,25 @@ public class inputController : MonoBehaviour {
 					mouseStart.y = mousePos.y;
 					mousePos.y = tmp;
 				}
-
 				for (int x = Mathf.FloorToInt(this.mouseStart.x); x <= Mathf.FloorToInt(mousePos.x); x++) // loop through all tiles and set their tiles
 				{
 					for (int y = Mathf.FloorToInt(this.mouseStart.y); y <= Mathf.FloorToInt(this.mousePos.y); y++)
 					{
-						this.worldController.GetComponent<worldController>().getWorld().setTileAt(x, y, tileType.grass, 1);
+						if (this.placeMode == 0) // we are in tile place mode
+						{
+							this.worldController.GetComponent<worldController>().getWorld().setTileAt(x, y, tileType.grass, 1);
+							// TODO we should get what kind of tile the user wants to place
+						}
+						else if (this.placeMode == 1) // we are in object place mode
+						{
+						this.worldController.GetComponent<worldController>().getWorld().placeWorldObject(
+							"wall",
+							this.worldController.GetComponent<worldController>().getWorld().getTileAt(x, y)); // TODO use a selection system
+						}
+						else
+						{
+							Debug.Log("Not a valid place mode");
+						}
 					}
 				}
 			}
@@ -166,7 +181,7 @@ public class inputController : MonoBehaviour {
 						selectGOs.Add(GO);
 					}
 				}
-			}
+			} 
 		}
 	}
 	void updateRightMouse()
@@ -194,13 +209,24 @@ public class inputController : MonoBehaviour {
 					mouseStart.y = mousePos.y;
 					mousePos.y = tmp;
 				}
-
 				for (int x = Mathf.FloorToInt(this.mouseStart.x); x <= Mathf.FloorToInt(mousePos.x); x++) // loop through all tiles and set their tiles
 				{
 					for (int y = Mathf.FloorToInt(this.mouseStart.y); y <= Mathf.FloorToInt(this.mousePos.y); y++)
 					{
-						this.worldController.GetComponent<worldController>().getWorld().setTileAt(x, y, tileType.dirt, 0); // TODO use a break time system? 
-																															// or maybe only can break one at a time?
+						if (this.placeMode == 0) // we are in tile delete mode
+						{
+							this.worldController.GetComponent<worldController>().getWorld().setTileAt(x, y, tileType.dirt, 0); // TODO use a break time system? 
+																																// or maybe only can break one at a time?
+						}
+						else if (this.placeMode == 1)// we are in object delete mode
+						{
+							this.worldController.GetComponent<worldController>().getWorld().destroyWorldObject(
+								this.worldController.GetComponent<worldController>().getWorld().getTileAt(x, y));
+                        }
+						else
+						{
+							Debug.Log("Not a valid place mode");
+						}
 					}
 				}
 			}
@@ -239,5 +265,9 @@ public class inputController : MonoBehaviour {
 			}
 		}
 
+	}
+	public void setPlaceMode(int mode)
+	{
+		this.placeMode = mode;
 	}
 }
