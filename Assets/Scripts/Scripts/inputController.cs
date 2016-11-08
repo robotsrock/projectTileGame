@@ -130,7 +130,7 @@ public class inputController : MonoBehaviour {
 				{
 					for (int y = Mathf.FloorToInt(this.mouseStart.y); y <= Mathf.FloorToInt(this.mousePos.y); y++)
 					{
-						this.worldController.GetComponent<worldController>().getWorld().setTileAt(x, y, tileType.grass, 0);
+						this.worldController.GetComponent<worldController>().getWorld().setTileAt(x, y, tileType.grass, 1);
 					}
 				}
 			}
