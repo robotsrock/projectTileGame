@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 
 
-public class world
+public class world // REFACTOR use properties
 {
 	tile[,] worldTiles;
 	character mainCharacter;

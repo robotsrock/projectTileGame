@@ -11,10 +11,10 @@ public enum tileType
 public class tile //! REFACTOR use properties!!!!!
 {
 	tileType tileBase; // the type of the tile eg. dirt, grass, sand
-	int tileVariant;   // the type variation eg. blue grass, red dirt, white sand, might have different characteristics than other variants, like moverate
+	int tileVariant;   // the type variation eg. blue grass, red dirt, white sand, might have different characteristics than other variants, like moverate 
 
 	public Vector2 position { get; protected set; }  // position of the tile in data space
-	public worldObject childObject { get; protected set; }
+	public worldObject childObject { get; protected set; } // TODO load from XML, so use a name system like we have in worldObject
 
 	Action<tile> onSetCB; // call back for setting the type
 
