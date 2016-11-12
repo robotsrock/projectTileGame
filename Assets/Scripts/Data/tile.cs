@@ -65,7 +65,7 @@ public class tile //! REFACTOR use properties!!!!!
 		}
 		else if (this.childObject != null)
 		{
-			Debug.Log("Tile_" + this.position.x + "_" + this.position.y + " already has a world object");
+			//Debug.Log("Tile_" + this.position.x + "_" + this.position.y + " already has a world object");
 			return false;
 		}
 		else
