@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 
 
-public class world
+public class world // REFACTOR use properties
 {
 	tile[,] worldTiles;
 	character mainCharacter;
@@ -25,7 +25,7 @@ public class world
 		{
 			for (int y = 0; y < worldHeight; y++)
 			{
-				this.worldTiles[x, y] = new tile(tileType.grass, 0, new Vector2(x, y)); // create a basic grass tile for all tiles (they wil be changed later)
+				this.worldTiles[x, y] = new tile(tileType.grass, 0, new Vector2(x, y), this); // create a basic grass tile for all tiles (they wil be changed later)
 																						// TODO create a proper world generator, and call it here
 			}
 		}
@@ -82,6 +82,7 @@ public class world
 		{
 			Debug.Log("world::placeWorldOject: No object of type " + objectType);
 		}
+		this.updateAdjacentTiles(t); // update the adjacent tiles
 	}
 	public void destroyWorldObject(tile t)
 	{
@@ -90,6 +91,7 @@ public class world
 			onWorldObjectDestroyedCB(t.childObject);
 		}
 		worldObject.destroyInstance(t);
+		this.updateAdjacentTiles(t); // update the adjacent tiles
 	}
 	public void registerWorldObjectCreatedCB(Action<worldObject> callback)
 	{
@@ -106,5 +108,13 @@ public class world
 	public void unRegisterWorldObjectDestroyedCB(Action<worldObject> callback)
 	{
 		onWorldObjectDestroyedCB -= callback;
+	}
+	public void updateAdjacentTiles(tile t) // update adjacent tiles AND this tile
+	{
+		t.update();
+		t.getAdjacent( 1,  0).update();
+		t.getAdjacent(-1,  0).update();
+		t.getAdjacent( 0,  1).update();
+		t.getAdjacent( 0, -1).update();
 	}
 }

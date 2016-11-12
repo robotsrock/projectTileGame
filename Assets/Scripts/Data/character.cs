@@ -2,20 +2,18 @@
 using System.Collections;
 using System;
 
-public class character
+public class character // REFACTOR use properties
 {
 	Vector2 position;
 	string name;
 	float moveSpeed;
 	Action<character> onMoveCB;
-	world parentWorld;
 
 	public character(Vector2 position, string name, float moveSpeed, world theWorld)
 	{
 		this.position = position;
 		this.name = name;
 		this.moveSpeed = moveSpeed;
-		this.parentWorld = theWorld;
 	}
 	public void moveChar(Vector2 dir)
 	{
