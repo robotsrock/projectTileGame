@@ -59,8 +59,7 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 
 		firstWorld.registerWorldObjectCreatedCB(onWorldObjectCreated);
 		firstWorld.registerWorldObjectDestroyedCB(onWorldObjectDestroyed);
-
-		this.wallSprite = spriteManager.instance.getSprite("wall-sheet", "wall_b_0"); //! NOTE TMP code, we need dedicated sprite controllers DESPERATELY
+		this.wallSprite = spriteManager.instance.getSprite("wall-sheet", "wall_b_0"); //! NOTE TMP code, this is a placeholder for the first OBJ
 	}
 	void generateWorld()
 	{
@@ -161,6 +160,8 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 	}
 	public void onWorldObjectChanged(worldObject obj)
 	{
-		Debug.Log("onWorldObjectChanged not implemented");
+		worldObjects[obj].GetComponent<SpriteRenderer>().sprite = spriteManager.instance.getSprite(
+			"wall-sheet",
+			"wall_b_" + obj.flags); //! NOTE TMP code, we need dedicated sprite controllers DESPERATELY
 	}
 }

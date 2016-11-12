@@ -9,7 +9,7 @@
 	<sprite name="wall_b_6"  x="0"  y="384"/>
 	<sprite name="wall_b_7"  x="0"  y="448"/>
 	<sprite name="wall_b_8"  x="0"  y="512"/>
-	<sprite name="wall_b_9"  x="0"  y="576"/>
+	<sprite name="wall_b_9"  x="0"  y="574"/>
 	<sprite name="wall_b_10" x="0"  y="640"/>
 	<sprite name="wall_b_11" x="0"  y="704"/>
 	<sprite name="wall_b_12" x="0"  y="768"/>
