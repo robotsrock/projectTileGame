@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sprites>
+	<index sheetName="wall-sheet" author="robotsrock171"/>
 	<sprite name="wall_b_0"  x="0"  y="0"/>
 	<sprite name="wall_b_1"	 x="0"  y="64"/>
 	<sprite name="wall_b_2"  x="0"  y="128"/>

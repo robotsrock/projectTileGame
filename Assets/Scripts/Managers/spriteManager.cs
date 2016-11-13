@@ -14,6 +14,11 @@ public class spriteSheet
 		sprites = new Dictionary<string, Sprite>();
 	}
 }
+public class sheetIndex
+{
+	public string sheetName;
+	public string author;
+}
 public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets) from the streamingassets folder
 {
 	static public spriteManager instance;
@@ -62,12 +67,37 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 					{
 						if (!fileNames[i].Contains(".meta")) // only call if its NOT a meta file
 						{
-							this.spriteSheets.Add(System.IO.Path.GetFileNameWithoutExtension(fileNames[i]), loadSpriteSheet(fileNames[i]));
+							sheetIndex index = getIndexData(fileNames[i]);
+							this.spriteSheets.Add(index.sheetName, loadSpriteSheet(fileNames[i]));
 						}
 					}
 				}
 			}
 		}
+	}
+	sheetIndex getIndexData(string filePath) // gets date from <index>
+	{
+		string baseSpritePath = System.IO.Path.GetFileNameWithoutExtension(filePath);
+		string xmlPath = System.IO.Path.Combine(System.IO.Directory.GetParent(filePath).FullName, baseSpritePath + ".xml"); // NOTE the xml extension must be in LOWER CASE 
+		XmlTextReader reader = new XmlTextReader(xmlPath);
+		if (!reader.ReadToDescendant("index"))
+		{
+			Debug.Log("spriteManager::getIndexData: No <index> in " + xmlPath);
+			return null;
+		}
+		string name = reader.GetAttribute("sheetName");
+		string author = reader.GetAttribute("author");
+		if (name == null || author == null)
+		{
+			Debug.LogError("spriteManager::getIndexData: Invalid index data in " + xmlPath);
+			return null;
+		}
+
+		sheetIndex tmpIndex = new sheetIndex();
+		tmpIndex.sheetName = name;
+		tmpIndex.author = author;
+
+		return tmpIndex;
 	}
 	spriteSheet loadSpriteSheet(string filePath) // loads a sprite sheet and puts it in our dictionary
 	{
@@ -98,7 +128,7 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 		if (!reader.ReadToDescendant("sprite"))
 		{
 			// we have an empty file!
-			Debug.LogError("spriteManager::loadSpriteSheet: No <sprite> in " + filePath + ".xml");
+			Debug.LogError("spriteManager::loadSpriteSheet: No <sprite> in " + xmlPath);
 			return null;
 		}
 		else
@@ -116,7 +146,7 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 		return sheet;
 
 	}
-	Sprite loadSpriteFromXML(Texture2D imgText, XmlTextReader reader, out string outName) 
+	Sprite loadSpriteFromXML(Texture2D imgText, XmlTextReader reader, out string outName) // FIXME add an error message if missing x or y
 		// NOTE this renders incorrect edges VERY rarely (ie. when moving AND scaling the camera), 
 		// if this becomes a problem in the future, create a 2 pixel border around every sprite, of the same edge colour, 
 		// this will eliminate the issue, but since it is VERY rare occurence, 
@@ -158,8 +188,12 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 			{
 				return instance.spriteSheets[sheetName].sprites[spriteName];
 			}
+			else
+			{
+				Debug.Log("spriteManager::getSprite: No sprite of name " + spriteName + " in " + sheetName);
+			}
 		}
-		Debug.Log("spriteManager::getSprite: No sprite of name " + spriteName + " in " + sheetName);
+		Debug.Log("spriteManager::getSprite: No spriteSheet of name " + sheetName);
 		return null; // TODO maybe return a purple square
 	}
 }

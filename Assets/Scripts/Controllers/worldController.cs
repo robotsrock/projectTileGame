@@ -25,24 +25,24 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 	public GameObject lookPointPrefab;
 
 	world firstWorld; // world contains the array of tiles
-	GameObject[,] tileGOs;
 	GameObject characterGO;
 	character mainChar;
-	Vector2 lastMoveDir;
 	Sprite wallSprite;
 
 	Dictionary<worldObject, GameObject> worldObjects;
 
+	tileSpriteController tileController;
+
 	void Awake()// gets run right at the start
 	{
-		this.setupWorld(); // HACK we should't do it like this, its very subjective. 
-		this.generateWorld();
+
 	}
 	// Use this for initialization
 	void Start ()
 	{
-		this.setupAxis(); // HACK Find a better way to load all input bindings after the manager gets setup, maybe a buffer?
-    }
+		this.setupWorld();
+		this.generateWorld();
+	}
 	
 	// Update is called once per frame
 	void Update ()
@@ -51,7 +51,6 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 	}
 	void setupWorld()
 	{
-		tileGOs = new GameObject[this.worldWidth, this.worldHeight];
 		firstWorld = new world();
 		firstWorld.setupWorld(this.worldWidth, this.worldHeight);
 		this.mainChar = firstWorld.getMainCharacter();
@@ -60,6 +59,8 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 		firstWorld.registerWorldObjectCreatedCB(onWorldObjectCreated);
 		firstWorld.registerWorldObjectDestroyedCB(onWorldObjectDestroyed);
 		this.wallSprite = spriteManager.instance.getSprite("wall-sheet", "wall_b_0"); //! NOTE TMP code, this is a placeholder for the first OBJ
+
+		tileController = GameObject.FindGameObjectWithTag("tileSpriteController").GetComponent<tileSpriteController>();
 	}
 	void generateWorld()
 	{
@@ -67,22 +68,9 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 		{
 			for (int y = 0; y < this.worldHeight; y++)
 			{
-				tile tileAtPos = firstWorld.getTileAt(x, y);
-
-				GameObject tileGO = new GameObject("tile_" + x + "_" + y);
-				tileGO.transform.SetParent(this.transform);
-				tileGO.transform.position = new Vector3(x, y, 0);
-				SpriteRenderer tileSR = tileGO.gameObject.AddComponent<SpriteRenderer>();
-				tileSR.sprite = allTileSprites[(int)tileAtPos.getTileType()].spriteSet[tileAtPos.getTileVariant()]; // uses the tile's type and variant to get the right sprite
-
-				tileGOs[x, y] = tileGO;
-
-				tileAtPos.registerSetCallback((tile) => { this.onTileChanged(tile, tileGO); });
+				tileController.addGO(x, y, firstWorld.getTileAt(x, y));
 			}
 		}
-
-
-
 		GameObject charGO = new GameObject("mainCharacter_" + this.mainChar.getName());
 		charGO.transform.SetParent(this.transform);
 		charGO.transform.position = new Vector3(mainChar.getPosition().x, mainChar.getPosition().y, -2); // setup the main character game object
@@ -97,27 +85,10 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 		this.characterGO = charGO;
 		this.mainChar.registerMoveCallback((character) => { this.onCharMoved(character, charGO); });
 	}
-	public void onTileChanged(tile tileData, GameObject tileGO) // when a tile changes type or variant, we update the sprite
-	{
-		tileGO.GetComponent<SpriteRenderer>().sprite = allTileSprites[(int)tileData.getTileType()].spriteSet[tileData.getTileVariant()];
-	}
+
 	public void onCharMoved(character charData, GameObject charGO) // when a character moves, we update the GO pos
 	{
 		charGO.transform.position = new Vector3(charData.getPosition().x, charData.getPosition().y, -2);
-	}
-	public void randomizeTiles()
-	{
-		for (int x = 0; x < this.worldWidth; x++)
-		{
-			for (int y = 0; y < worldHeight; y++)
-			{
-				int rand = Random.Range(1, 3);
-				this.firstWorld.getTileAt(x, y).setTile((tileType)rand, 0);
-			}
-		}
-	}
-	void setupAxis()
-	{
 	}
 	public world getWorld()
 	{

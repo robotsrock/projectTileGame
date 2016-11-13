@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Controllers\characterController.cs" />
     <Compile Include="Assets\Scripts\Controllers\inputController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\tileSpriteController.cs" />
     <Compile Include="Assets\Scripts\Controllers\worldController.cs" />
     <Compile Include="Assets\Scripts\Data\character.cs" />
     <Compile Include="Assets\Scripts\Data\tile.cs" />
@@ -82,6 +83,8 @@
     <Compile Include="Assets\Scripts\Scripts\lookPoint.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\StreamingAssets\sprites\tiles\grass.xml" />
+    <None Include="Assets\StreamingAssets\sprites\tiles\stone.xml" />
     <None Include="Assets\StreamingAssets\sprites\worldObjects\wall-sheet.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

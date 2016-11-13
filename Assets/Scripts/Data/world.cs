@@ -25,7 +25,7 @@ public class world // REFACTOR use properties
 		{
 			for (int y = 0; y < worldHeight; y++)
 			{
-				this.worldTiles[x, y] = new tile(tileType.grass, 0, new Vector2(x, y), this); // create a basic grass tile for all tiles (they wil be changed later)
+				this.worldTiles[x, y] = new tile("grass", 0, new Vector2(x, y), this);  // create a basic grass tile for all tiles (they wil be changed later)
 																						// TODO create a proper world generator, and call it here
 			}
 		}
@@ -34,15 +34,32 @@ public class world // REFACTOR use properties
 	}
 	public tile getTileAt(int x, int y)
 	{
-		return this.worldTiles[x, y];
+		if (x >= 0 && y >= 0)
+		{
+			return this.worldTiles[x, y];
+		}
+		else
+		{
+			return null;
+		}
 	}
 	public worldObject getWorldObjectAt(int x, int y)
 	{
-		return this.worldTiles[x, y].childObject;
+		if (x >= 0 && y >= 0)
+		{
+			return this.worldTiles[x, y].childObject;
+		}
+		else
+		{
+			return null;
+		}
 	}
-	public void setTileAt(int x, int y, tileType type, int variant)
+	public void setTileAt(int x, int y, string type, int variant)
 	{
-		this.worldTiles[x, y].setTile(type, variant);
+		if (x >= 0 && y >= 0)
+		{
+			this.worldTiles[x, y].setTile(type, variant);
+		}
 	}
 	public character getMainCharacter()
 	{

@@ -2,39 +2,24 @@
 using System.Collections;
 using System;
 
-public enum tileType
+public class tile
 {
-	empty,
-	dirt,
-	grass
-};
-public class tile //! REFACTOR use properties!!!!!
-{
-	tileType tileBase; // the type of the tile eg. dirt, grass, sand
-	int tileVariant;   // the type variation eg. blue grass, red dirt, white sand, might have different characteristics than other variants, like moverate 
-
+	public string tileBase { get; protected set; } // the type of the tile eg. dirt, grass, sand
+	public int tileVariant { get; protected set; } // the type variation eg. blue grass, red dirt, white sand, might have different characteristics than other variants, like move rate, fertility
 	public Vector2 position { get; protected set; }  // position of the tile in data space
-	public worldObject childObject { get; protected set; } // TODO load from XML, so use a name system like we have in worldObject
+	public worldObject childObject { get; protected set; } // TODO load from XML, create prototypes
 	public world parentWorld { get; protected set; }
 
 	Action<tile> onSetCB; // call back for setting the type
 
-	public tile(tileType type, int variant, Vector2 position, world parentWorld)
+	public tile(string type, int variant, Vector2 position, world parentWorld)
 	{
 		this.tileBase = type;
 		this.tileVariant = variant;
 		this.position = position;
 		this.parentWorld = parentWorld;
 	}
-	public tileType getTileType()
-	{
-		return this.tileBase;
-	}
-	public int getTileVariant()
-	{
-		return this.tileVariant;
-	}
-	public void setTile(tileType type, int variant)
+	public void setTile(string type, int variant)
 	{
 		this.tileBase = type;
 		this.tileVariant = variant;
@@ -99,12 +84,7 @@ public class tile //! REFACTOR use properties!!!!!
 			Debug.Log("tile::getAdjacent: Not in range");
 			return null;
 		}
-		if (x == 1 && y == 1) // TODO implement diagonals
-		{
-			Debug.Log("tile::getAdjacent: Diagonals not implemented");
-			return null;
-		}
-		if (x == -1 && y == -1)
+		if (x == y) // TODO implement diagonals
 		{
 			Debug.Log("tile::getAdjacent: Diagonals not implemented");
 			return null;
@@ -118,12 +98,7 @@ public class tile //! REFACTOR use properties!!!!!
 			Debug.Log("tile::getAdjacent: Not in range");
 			return null;
 		}
-		if (x == 1 && y == 1) // TODO implement diagonals
-		{
-			Debug.Log("tile::getAdjacentObjectType: Diagonals not implemented");
-			return null;
-		}
-		if (x == -1 && y == -1)
+		if (x == y) // TODO implement diagonals
 		{
 			Debug.Log("tile::getAdjacentObjectType: Diagonals not implemented");
 			return null;
