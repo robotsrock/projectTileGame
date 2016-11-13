@@ -1,0 +1,7 @@
+<sprites imagePath="sprites.png">
+	<index sheetName ="char" author ="robotsrock171" pivot ="C"/>
+	<sprite name="char_0_0" x="0" y="0" w="148" h="154"/>
+	<sprite name="char_1_0" x="0" y="0" w="148" h="154"/>
+	<sprite name="char_2_0" x="300" y="156" w="148" h="154"/>
+	<sprite name="char_3_0" x="300" y="0" w="148" h="154"/>
+</sprites>

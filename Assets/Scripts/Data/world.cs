@@ -7,7 +7,8 @@ using System;
 public class world // REFACTOR use properties
 {
 	tile[,] worldTiles;
-	character mainCharacter;
+
+	public character mainCharacter { get; protected set; }
 
 	Dictionary<string, worldObject> worldObjectProtos;
 	Action<worldObject> onWorldObjectCreatedCB;
@@ -60,10 +61,6 @@ public class world // REFACTOR use properties
 		{
 			this.worldTiles[x, y].setTile(type, variant);
 		}
-	}
-	public character getMainCharacter()
-	{
-		return this.mainCharacter;
 	}
 
 	public void setupPrototypes()

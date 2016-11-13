@@ -18,6 +18,7 @@ public class sheetIndex
 {
 	public string sheetName;
 	public string author;
+	public Vector2 pivotPoint;
 }
 public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets) from the streamingassets folder
 {
@@ -82,20 +83,41 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 		XmlTextReader reader = new XmlTextReader(xmlPath);
 		if (!reader.ReadToDescendant("index"))
 		{
-			Debug.Log("spriteManager::getIndexData: No <index> in " + xmlPath);
+			Debug.LogError("spriteManager::getIndexData: No <index> in " + xmlPath);
 			return null;
 		}
 		string name = reader.GetAttribute("sheetName");
 		string author = reader.GetAttribute("author");
+		string pivot = "BL"; // placeholder
+		Vector2 point = new Vector2();
+
 		if (name == null || author == null)
 		{
 			Debug.LogError("spriteManager::getIndexData: Invalid index data in " + xmlPath);
 			return null;
 		}
+		try
+		{
+			pivot = reader.GetAttribute("pivot");
+		}
+		catch
+		{
+			pivot = "BL";
+		}
+
+		if (pivot == "C")
+		{
+			point = new Vector2(0.5f, 0.5f);
+		}
+		else
+		{
+			point = new Vector2(0.0f, 0.0f);
+		}
 
 		sheetIndex tmpIndex = new sheetIndex();
 		tmpIndex.sheetName = name;
 		tmpIndex.author = author;
+		tmpIndex.pivotPoint = point;
 
 		return tmpIndex;
 	}
@@ -134,19 +156,19 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 		else
 		{
 			string name;
-			Sprite sprite = loadSpriteFromXML(imgText, reader, out name);
+			Sprite sprite = loadSpriteFromXML(imgText, reader, out name, getIndexData(xmlPath).pivotPoint);
 			sheet.sprites.Add(name, sprite);
 		}
 		while (reader.ReadToNextSibling("sprite"))
 		{
 			string name;
-			Sprite sprite = loadSpriteFromXML(imgText, reader, out name);
+			Sprite sprite = loadSpriteFromXML(imgText, reader, out name, getIndexData(xmlPath).pivotPoint);
 			sheet.sprites.Add(name, sprite);
 		}
 		return sheet;
 
 	}
-	Sprite loadSpriteFromXML(Texture2D imgText, XmlTextReader reader, out string outName) // FIXME add an error message if missing x or y
+	Sprite loadSpriteFromXML(Texture2D imgText, XmlTextReader reader, out string outName, Vector2 pivotPoint) // FIXME add an error message if missing x or y
 		// NOTE this renders incorrect edges VERY rarely (ie. when moving AND scaling the camera), 
 		// if this becomes a problem in the future, create a 2 pixel border around every sprite, of the same edge colour, 
 		// this will eliminate the issue, but since it is VERY rare occurence, 
@@ -175,7 +197,7 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 			h = 64;
 		}
 		outName = name;
-		Sprite sprite = Sprite.Create(imgText, new Rect(x, y, w, h), new Vector2(0.0f, 0.0f), 64); // TODO remove the hardcoded pivot point and PPU
+		Sprite sprite = Sprite.Create(imgText, new Rect(x, y, w, h), pivotPoint, 64); // TODO remove the hardcoded PPU
 		sprite.texture.filterMode = FilterMode.Point;
 		return sprite;
 	}

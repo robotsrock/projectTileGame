@@ -19,24 +19,16 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 	[Space(5)]
 	public tileSpriteSet[] allTileSprites; // FIXME move this to a dedicated tile sprite file, this code is not easy to read
 										   // TODO load from a file
-	
 	public Sprite characterSprite;
-	[Header("Objects")]
-	public GameObject lookPointPrefab;
 
 	world firstWorld; // world contains the array of tiles
-	GameObject characterGO;
-	character mainChar;
 	Sprite wallSprite;
 
 	Dictionary<worldObject, GameObject> worldObjects;
 
 	tileSpriteController tileController;
+	characterController charController;
 
-	void Awake()// gets run right at the start
-	{
-
-	}
 	// Use this for initialization
 	void Start ()
 	{
@@ -44,16 +36,10 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 		this.generateWorld();
 	}
 	
-	// Update is called once per frame
-	void Update ()
-	{
-
-	}
 	void setupWorld()
 	{
 		firstWorld = new world();
 		firstWorld.setupWorld(this.worldWidth, this.worldHeight);
-		this.mainChar = firstWorld.getMainCharacter();
 		worldObjects = new Dictionary<worldObject, GameObject>();
 
 		firstWorld.registerWorldObjectCreatedCB(onWorldObjectCreated);
@@ -61,6 +47,7 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 		this.wallSprite = spriteManager.instance.getSprite("wall-sheet", "wall_b_0"); //! NOTE TMP code, this is a placeholder for the first OBJ
 
 		tileController = GameObject.FindGameObjectWithTag("tileSpriteController").GetComponent<tileSpriteController>();
+		charController = GameObject.FindGameObjectWithTag("characterController").GetComponent<characterController>();
 	}
 	void generateWorld()
 	{
@@ -71,36 +58,12 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 				tileController.addGO(x, y, firstWorld.getTileAt(x, y));
 			}
 		}
-		GameObject charGO = new GameObject("mainCharacter_" + this.mainChar.getName());
-		charGO.transform.SetParent(this.transform);
-		charGO.transform.position = new Vector3(mainChar.getPosition().x, mainChar.getPosition().y, -2); // setup the main character game object
-		charGO.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
-		SpriteRenderer charSR = charGO.AddComponent<SpriteRenderer>();
-		charSR.sprite = this.characterSprite;
+		charController.addGO(firstWorld.mainCharacter);
 
-		GameObject lpGO = (GameObject)Instantiate(this.lookPointPrefab, charGO.transform);
-		lpGO.transform.localPosition = new Vector3(0.1f, 0, 2);
-		lpGO.transform.localScale = new Vector3(0.8f, 0.8f, 1.0f);
-
-		this.characterGO = charGO;
-		this.mainChar.registerMoveCallback((character) => { this.onCharMoved(character, charGO); });
-	}
-
-	public void onCharMoved(character charData, GameObject charGO) // when a character moves, we update the GO pos
-	{
-		charGO.transform.position = new Vector3(charData.getPosition().x, charData.getPosition().y, -2);
 	}
 	public world getWorld()
 	{
 		return this.firstWorld;
-	}
-	public character getMainChar()
-	{
-		return this.mainChar;
-	}
-	public GameObject getMainCharGO()
-	{
-		return this.characterGO;
 	}
 	public void onWorldObjectCreated(worldObject obj)
 	{

@@ -19,7 +19,6 @@ public class tileSpriteController : MonoBehaviour
 	}
 	public void addGO(int x, int y, tile t)
 	{
-
 		GameObject tileGO = new GameObject("tile_" + x + "_" + y);
 		tileGO.transform.SetParent(this.transform);
 		tileGO.transform.position = new Vector3(x, y, 0);
@@ -32,7 +31,6 @@ public class tileSpriteController : MonoBehaviour
 	}
 
 	//?+ callbacks
-
 	public void onTileChanged(tile t, GameObject tileGO) // when a tile changes type or variant, we update the sprite
 	{
 		tileGO.GetComponent<SpriteRenderer>().sprite = spriteManager.instance.getSprite(t.tileBase, t.tileBase + "_" + t.tileVariant + "_0");
