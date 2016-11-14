@@ -10,7 +10,7 @@ public class axisData // TODO maybe have a list for all positives and one for al
 	public bool isOnGamePad;
 }
 
-public class inputManager
+public class inputManager : MonoBehaviour
 {
 	Dictionary<string, KeyCode> buttonDictionary; // TODO maybe add in mouse button functionality? also maybe multiple buttons like we have for axis data
 	Dictionary<string, axisData> axisDictionary;  // TODO unbind functions
@@ -18,13 +18,15 @@ public class inputManager
 	bool hasBeenSetup = false;
 
 	public static inputManager instance{ get; private set; }
-	public inputManager()
+
+	void Awake()
 	{
 		if (instance == null)
 		{
 			instance = this;
 		}
 	}
+
 	public void setupManager(bool useGamePad)
 	{
 		instance.axisDictionary = new Dictionary<string, axisData>();

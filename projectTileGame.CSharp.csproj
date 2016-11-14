@@ -71,6 +71,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Controllers\WOspriteController.cs" />
     <Compile Include="Assets\Scripts\Controllers\characterController.cs" />
     <Compile Include="Assets\Scripts\Controllers\inputController.cs" />
     <Compile Include="Assets\Scripts\Controllers\tileSpriteController.cs" />
@@ -86,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\StreamingAssets\sprites\characters\robot.xml" />
+    <None Include="Assets\StreamingAssets\sprites\misc\misc.xml" />
     <None Include="Assets\StreamingAssets\sprites\tiles\grass.xml" />
     <None Include="Assets\StreamingAssets\sprites\tiles\stone.xml" />
     <None Include="Assets\StreamingAssets\sprites\worldObjects\wall-sheet.xml" />

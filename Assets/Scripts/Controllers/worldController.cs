@@ -9,45 +9,39 @@ public class tileSpriteSet // each has a set of sprites for that tile, 0 is an e
 }
 
 
-public class worldController : MonoBehaviour // REFACTOR use properties, also we need to use a list for GOs
-	// REFACTOR split this into indovidual sprite controllers
+public class worldController : MonoBehaviour // REFACTOR we need to use a list for GOs
 {
 	[Header("Variables")]
 	public int worldWidth = 10;
 	public int worldHeight = 10;
-	[Header("Sprites")]
-	[Space(5)]
-	public tileSpriteSet[] allTileSprites; // FIXME move this to a dedicated tile sprite file, this code is not easy to read
-										   // TODO load from a file
-	public Sprite characterSprite;
 
-	world firstWorld; // world contains the array of tiles
-	Sprite wallSprite;
-
-	Dictionary<worldObject, GameObject> worldObjects;
+	public world firstWorld { get; protected set; } // world contains the array of tiles
 
 	tileSpriteController tileController;
 	characterController charController;
+	WOspriteController WOcontroller;
 
 	// Use this for initialization
 	void Start ()
 	{
-		this.setupWorld();
-		this.generateWorld();
+		if (firstWorld == null)
+		{
+			this.setupWorld();
+		}
 	}
 	
-	void setupWorld()
+	public void setupWorld()
 	{
 		firstWorld = new world();
 		firstWorld.setupWorld(this.worldWidth, this.worldHeight);
-		worldObjects = new Dictionary<worldObject, GameObject>();
-
-		firstWorld.registerWorldObjectCreatedCB(onWorldObjectCreated);
-		firstWorld.registerWorldObjectDestroyedCB(onWorldObjectDestroyed);
-		this.wallSprite = spriteManager.instance.getSprite("wall-sheet", "wall_b_0"); //! NOTE TMP code, this is a placeholder for the first OBJ
 
 		tileController = GameObject.FindGameObjectWithTag("tileSpriteController").GetComponent<tileSpriteController>();
 		charController = GameObject.FindGameObjectWithTag("characterController").GetComponent<characterController>();
+		WOcontroller   = GameObject.FindGameObjectWithTag("WOspriteController").GetComponent<WOspriteController>();
+
+		generateWorld();
+
+		Debug.Log("World is setup");
 	}
 	void generateWorld()
 	{
@@ -59,43 +53,5 @@ public class worldController : MonoBehaviour // REFACTOR use properties, also we
 			}
 		}
 		charController.addGO(firstWorld.mainCharacter);
-
-	}
-	public world getWorld()
-	{
-		return this.firstWorld;
-	}
-	public void onWorldObjectCreated(worldObject obj)
-	{
-		// create a GO for the obj
-		GameObject objGO = new GameObject();
-
-		worldObjects.Add(obj, objGO); // add it to the list
-
-		objGO.name = obj.objectType + "_" + obj.baseTile.position.x + "_" + obj.baseTile.position.y;
-        objGO.transform.SetParent(this.transform);
-		objGO.transform.position = new Vector3(obj.baseTile.position.x, obj.baseTile.position.y, 0);
-		SpriteRenderer tileSR = objGO.AddComponent<SpriteRenderer>();
-		tileSR.sprite = this.wallSprite;
-		objGO.AddComponent<BoxCollider>();
-
-		obj.registerOnChangedCB(onWorldObjectChanged);
-	}
-	public void onWorldObjectDestroyed(worldObject obj)
-	{
-		if (obj != null)
-		{
-			if (this.worldObjects.ContainsKey(obj))
-			{
-				this.worldObjects[obj].transform.SetParent(null);
-				Destroy(this.worldObjects[obj]);
-			}
-		}
-	}
-	public void onWorldObjectChanged(worldObject obj)
-	{
-		worldObjects[obj].GetComponent<SpriteRenderer>().sprite = spriteManager.instance.getSprite(
-			"wall-sheet",
-			"wall_b_" + obj.flags); //! NOTE TMP code, we need dedicated sprite controllers DESPERATELY
 	}
 }

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sprites>
-	<index sheetName="wall-sheet" author="robotsrock171"/>
-	<sprite name="wall_b_0"  x="0"  y="0"/>
-	<sprite name="wall_b_1"	 x="0"  y="64"/>
-	<sprite name="wall_b_2"  x="0"  y="128"/>
-	<sprite name="wall_b_3"  x="0"  y="192"/>
-	<sprite name="wall_b_4"  x="0"  y="256"/>
-	<sprite name="wall_b_5"  x="0"  y="320"/>
-	<sprite name="wall_b_6"  x="0"  y="384"/>
-	<sprite name="wall_b_7"  x="0"  y="448"/>
-	<sprite name="wall_b_8"  x="0"  y="512"/>
-	<sprite name="wall_b_9"  x="0"  y="574"/>
-	<sprite name="wall_b_10" x="0"  y="640"/>
-	<sprite name="wall_b_11" x="0"  y="704"/>
-	<sprite name="wall_b_12" x="0"  y="768"/>
-	<sprite name="wall_b_13" x="0"  y="832"/>
-	<sprite name="wall_b_14" x="0"  y="896"/>
-	<sprite name="wall_b_15" x="0"  y="960"/>
+	<index sheetName="wall" author="robotsrock171" PPU ="64"/>
+	<sprite name="wall_0_0"  x="0"  y="0"/>
+	<sprite name="wall_0_1"	 x="0"  y="64"/>
+	<sprite name="wall_0_2"  x="0"  y="128"/>
+	<sprite name="wall_0_3"  x="0"  y="192"/>
+	<sprite name="wall_0_4"  x="0"  y="256"/>
+	<sprite name="wall_0_5"  x="0"  y="320"/>
+	<sprite name="wall_0_6"  x="0"  y="384"/>
+	<sprite name="wall_0_7"  x="0"  y="448"/>
+	<sprite name="wall_0_8"  x="0"  y="512"/>
+	<sprite name="wall_0_9"  x="0"  y="574"/>
+	<sprite name="wall_0_10" x="0"  y="640"/>
+	<sprite name="wall_0_11" x="0"  y="704"/>
+	<sprite name="wall_0_12" x="0"  y="768"/>
+	<sprite name="wall_0_13" x="0"  y="832"/>
+	<sprite name="wall_0_14" x="0"  y="896"/>
+	<sprite name="wall_0_15" x="0"  y="960"/>
 </sprites>

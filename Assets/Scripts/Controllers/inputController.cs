@@ -18,8 +18,6 @@ public class inputController : MonoBehaviour { // REFACTOR this should be split 
 	[Space(5)]
 	public Camera mainCamera;
 	public GameObject worldController;
-	public GameObject selectPrefab; // this should be handled better later
-	public GameObject deletePrefab;
 
 	bool cameraFloat = false;
 	Vector2 lastMousePos = Vector2.zero;
@@ -29,14 +27,14 @@ public class inputController : MonoBehaviour { // REFACTOR this should be split 
 	List<GameObject> deleteGOs;
 	bool isDeleting = false;
 
-	inputManager manager = new inputManager();
 	// Use this for initialization
 	void Start()
 	{
-		this.selectGOs = new List<GameObject>();
+		setup();
 	}
-	void Awake()
+	void setup()
 	{
+		this.selectGOs = new List<GameObject>();
 		this.setupAxis();
 	}
 	void setupAxis()
@@ -135,14 +133,14 @@ public class inputController : MonoBehaviour { // REFACTOR this should be split 
 					{
 						if (this.placeMode == 0) // we are in tile place mode
 						{
-							this.worldController.GetComponent<worldController>().getWorld().setTileAt(x, y, "stone", 0);
+							this.worldController.GetComponent<worldController>().firstWorld.setTileAt(x, y, "stone", 0);
 							// TODO we should get what kind of tile the user wants to place
 						}
 						else if (this.placeMode == 1) // we are in object place mode
 						{
-						this.worldController.GetComponent<worldController>().getWorld().placeWorldObject(
+						this.worldController.GetComponent<worldController>().firstWorld.placeWorldObject(
 							"wall",
-							this.worldController.GetComponent<worldController>().getWorld().getTileAt(x, y)); // TODO use a selection system
+							this.worldController.GetComponent<worldController>().firstWorld.getTileAt(x, y)); // TODO use a selection system
 						}
 						else
 						{
@@ -178,9 +176,13 @@ public class inputController : MonoBehaviour { // REFACTOR this should be split 
 				{
 					for (int y = Mathf.FloorToInt(start_y); y <= Mathf.FloorToInt(end_y); y++)
 					{
-						GameObject GO = SimplePool.Spawn(this.selectPrefab, new Vector3(x, y, -1f), Quaternion.identity); // use simplePool to pool the selection prefabs
+						GameObject tmp = new GameObject("selectBox");
+						SpriteRenderer sr = tmp.AddComponent<SpriteRenderer>();
+						sr.sprite = spriteManager.instance.getSprite("misc", "select_0");
+						GameObject GO = SimplePool.Spawn(tmp, new Vector3(x, y, -1f), Quaternion.identity); // use simplePool to pool the selection prefabs
 						GO.transform.SetParent(this.transform);
 						selectGOs.Add(GO);
+						Destroy(tmp);
 					}
 				}
 			} 
@@ -217,13 +219,13 @@ public class inputController : MonoBehaviour { // REFACTOR this should be split 
 					{
 						if (this.placeMode == 0) // we are in tile delete mode
 						{
-							this.worldController.GetComponent<worldController>().getWorld().setTileAt(x, y, "grass", 0);		// TODO use a break time system? 
+							this.worldController.GetComponent<worldController>().firstWorld.setTileAt(x, y, "grass", 0);		// TODO use a break time system? 
 																																// or maybe only can break one at a time?
 						}
 						else if (this.placeMode == 1)// we are in object delete mode
 						{
-							this.worldController.GetComponent<worldController>().getWorld().destroyWorldObject(
-								this.worldController.GetComponent<worldController>().getWorld().getTileAt(x, y));
+							this.worldController.GetComponent<worldController>().firstWorld.destroyWorldObject(
+								this.worldController.GetComponent<worldController>().firstWorld.getTileAt(x, y));
                         }
 						else
 						{
@@ -259,9 +261,13 @@ public class inputController : MonoBehaviour { // REFACTOR this should be split 
 				{
 					for (int y = Mathf.FloorToInt(start_y); y <= Mathf.FloorToInt(end_y); y++)
 					{
-						GameObject GO = SimplePool.Spawn(this.deletePrefab, new Vector3(x, y, -1f), Quaternion.identity); // use simplePool to pool the selection prefabs
+						GameObject tmp = new GameObject("deleteBox");
+						SpriteRenderer sr = tmp.AddComponent<SpriteRenderer>();
+						sr.sprite = spriteManager.instance.getSprite("misc", "delete_0");
+						GameObject GO = SimplePool.Spawn(tmp, new Vector3(x, y, -1f), Quaternion.identity); // use simplePool to pool the selection prefabs
 						GO.transform.SetParent(this.transform);
 						selectGOs.Add(GO);
+						Destroy(tmp);
 					}
 				}
 			}

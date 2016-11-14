@@ -1,5 +1,5 @@
 <sprites imagePath="sprites.png">
-	<index sheetName ="char" author ="robotsrock171" pivot ="C"/>
+	<index sheetName ="char" author ="robotsrock171" pivot ="C" PPU="148"/>
 	<sprite name="char_0_0" x="0" y="0" w="148" h="154"/>
 	<sprite name="char_1_0" x="148" y="0" w="148" h="154"/>
 	<sprite name="char_2_0" x="296" y="0" w="148" h="154"/>
