@@ -100,17 +100,29 @@ public class objectXMLManager : MonoBehaviour
 		{
 			worldObject proto = loadProtoFromXML(reader);
 			worldObjectProtos.Add(proto.objectType, proto);
+			while (reader.ReadToDescendant("variant"))
+			{
+				proto = loadProtoFromXML(reader);
+				worldObjectProtos.Add(proto.objectType, proto);
+			}
 		}
-		while(reader.ReadToDescendant("prototype"))
+		while(reader.ReadToNextSibling("prototype"))
 		{
 			worldObject proto = loadProtoFromXML(reader);
 			worldObjectProtos.Add(proto.objectType, proto);
+			while (reader.ReadToDescendant("variant"))
+			{
+				string name;
+				proto = loadProtoFromXML(reader);
+				worldObjectProtos.Add(proto.objectType, proto);
+			}
 		}
 		return;
 	}
 	worldObject loadProtoFromXML(XmlTextReader reader)
 	{
 		string type = reader.GetAttribute("type");
+		string name = reader.GetAttribute("name");
 		float moveRate = float.Parse(reader.GetAttribute("moveRate"));
 		int width = 1;// placeholder
 		int height = 1;
@@ -132,7 +144,7 @@ public class objectXMLManager : MonoBehaviour
 			height = 1;
 		}
 
-		worldObject obj = worldObject.createPrototype(type, moveRate, width, height);
+		worldObject obj = worldObject.createPrototype(type, moveRate, width, height, name);
 		return obj;
 	}
 }

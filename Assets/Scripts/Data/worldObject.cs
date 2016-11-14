@@ -7,6 +7,7 @@ public class worldObject
 	// TODO implement rotation
 	// TODO implement larger objects
 	public string objectType { get; protected set; }
+	public string name { get; protected set; }
 	public float movementCost { get; protected set; }
 	public tile baseTile { get; protected set; }
 	public uint flags { get; protected set; }			//! FLAGS:   3: left WO   2: down WO   1: right WO   0: up WO
@@ -19,7 +20,7 @@ public class worldObject
 	{
 	}
 
-	public static worldObject createPrototype(string objectType, float movementCost, int width, int height) // TODO implement w & h
+	public static worldObject createPrototype(string objectType, float movementCost, int width, int height, string name) // TODO implement w & h
 	{
 		worldObject obj = new worldObject();
 
@@ -27,6 +28,7 @@ public class worldObject
 		obj.movementCost = movementCost;
 		obj.width = width;
 		obj.height = height;
+		obj.name = name;
 
 		return obj;
 	}
@@ -39,6 +41,7 @@ public class worldObject
 		obj.movementCost = proto.movementCost;
 		obj.width = proto.width;
 		obj.height = proto.height;
+		obj.name = proto.name;
 		obj.baseTile = baseTile;
 		obj.flags = 0;
 

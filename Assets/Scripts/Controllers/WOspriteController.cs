@@ -39,7 +39,7 @@ public class WOspriteController : MonoBehaviour
 		objGO.transform.SetParent(this.transform);
 		objGO.transform.position = new Vector3(obj.baseTile.position.x, obj.baseTile.position.y, 0);
 		SpriteRenderer tileSR = objGO.AddComponent<SpriteRenderer>();
-		tileSR.sprite = spriteManager.instance.getSprite(obj.objectType, obj.objectType + "_0_0"); // TODO wall variants???
+		tileSR.sprite = spriteManager.instance.getSprite("wall", obj.objectType + "_0");
 		objGO.AddComponent<BoxCollider>();
 
 		obj.registerOnChangedCB(onWorldObjectChanged);
@@ -58,7 +58,7 @@ public class WOspriteController : MonoBehaviour
 	public void onWorldObjectChanged(worldObject obj)
 	{
 		worldObjects[obj].GetComponent<SpriteRenderer>().sprite = spriteManager.instance.getSprite(
-			"wall",
-			obj.objectType + "_0_" + obj.flags);
+			obj.name,
+			obj.objectType + "_" + obj.flags);
 	}
 }

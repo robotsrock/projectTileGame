@@ -14,6 +14,7 @@ public class inputController : MonoBehaviour { // REFACTOR this should be split 
 	public bool useGamePad = false;
 	public int placeMode; // 0 is place "Stone", 1 is place wall 
 						  // TODO change this so we place either tile or object
+	public string wallType; //! TMP
 	[Header("Objects")]
 	[Space(5)]
 	public Camera mainCamera;
@@ -139,7 +140,7 @@ public class inputController : MonoBehaviour { // REFACTOR this should be split 
 						else if (this.placeMode == 1) // we are in object place mode
 						{
 						this.worldController.GetComponent<worldController>().firstWorld.placeWorldObject(
-							"wall",
+							this.wallType,
 							this.worldController.GetComponent<worldController>().firstWorld.getTileAt(x, y)); // TODO use a selection system
 						}
 						else
