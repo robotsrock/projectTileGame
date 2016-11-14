@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<prototypes>
+	<index author ="robotsrock171"/>
+	<prototype type="wall" moveRate="0.0"/>
+</prototypes>

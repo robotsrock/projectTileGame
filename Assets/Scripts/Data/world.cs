@@ -10,7 +10,6 @@ public class world // REFACTOR use properties
 
 	public character mainCharacter { get; protected set; }
 
-	Dictionary<string, worldObject> worldObjectProtos;
 	Action<worldObject> onWorldObjectCreatedCB;
 	Action<worldObject> onWorldObjectDestroyedCB;
 
@@ -30,8 +29,6 @@ public class world // REFACTOR use properties
 																						// TODO create a proper world generator, and call it here
 			}
 		}
-
-		this.setupPrototypes();
 	}
 	public tile getTileAt(int x, int y)
 	{
@@ -62,27 +59,12 @@ public class world // REFACTOR use properties
 			this.worldTiles[x, y].setTile(type, variant);
 		}
 	}
-
-	public void setupPrototypes()
-	{
-		this.worldObjectProtos = new Dictionary<string, worldObject>(); // TODO read from XML file
-		this.createObjectPrototype("wall", 0.0f, 1, 1);
-	}
-	public void createObjectPrototype(string type, float movementCost, int width, int height)
-	{
-		worldObject obj = worldObject.createPrototype(
-			type,
-			movementCost,
-			width,
-			height);
-		this.worldObjectProtos.Add(type, obj);
-	}
 	public void placeWorldObject (string objectType, tile t)
 	{
 		// TODO make it use rotation and big objects
-		if (worldObjectProtos.ContainsKey(objectType))
+		if (objectXMLManager.instance.worldObjectProtos.ContainsKey(objectType))
 		{
-			worldObject obj = worldObject.placeInstance(worldObjectProtos[objectType], t);
+			worldObject obj = worldObject.placeInstance(objectXMLManager.instance.worldObjectProtos[objectType], t);
 			//Debug.Log("Placed object");
 			if (obj != null)
 			{

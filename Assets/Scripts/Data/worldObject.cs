@@ -19,7 +19,7 @@ public class worldObject
 	{
 	}
 
-	public static worldObject createPrototype(string objectType, float movementCost, int width, int height)
+	public static worldObject createPrototype(string objectType, float movementCost, int width, int height) // TODO implement w & h
 	{
 		worldObject obj = new worldObject();
 

@@ -5,24 +5,25 @@ using System;
 using UnityEngine.UI;
 using System.Xml; 
 
-public class spriteSheet
-{
-	public Dictionary<string, Sprite> sprites;
-
-	public spriteSheet()
-	{
-		sprites = new Dictionary<string, Sprite>();
-	}
-}
-public class sheetIndex
-{
-	public string sheetName;
-	public string author;
-	public Vector2 pivotPoint;
-	public int PPU;
-}
 public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets) from the streamingassets folder
 {
+	protected class spriteSheet
+	{
+		public Dictionary<string, Sprite> sprites;
+
+		public spriteSheet()
+		{
+			sprites = new Dictionary<string, Sprite>();
+		}
+	}
+	protected class sheetIndex
+	{
+		public string sheetName;
+		public string author;
+		public Vector2 pivotPoint;
+		public int PPU;
+	}
+
 	static public spriteManager instance;
 
 	Dictionary<string, spriteSheet> spriteSheets;
@@ -57,7 +58,7 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 			if(fileNames.Length == 0)
 			{
 				// No files in the directory, just return
-				Debug.Log("spriteManager::getDirs: No files in " + filePath);
+				Debug.Log("spriteManager::loadInDirs: No files in " + filePath); // FIXME meta files are evil
 				return;
 			}
 			else
@@ -65,7 +66,7 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 				for (int i = 0; i < fileNames.Length; i++)
 				{
 					if (fileNames[i].Contains(".png")) // we only want to load .png files
-													   // FIXME this will load any file that contains .png, not just ones that have it at the end
+													   // NOTE this will load any file that contains .png, not just ones that have it at the end
 					{
 						if (!fileNames[i].Contains(".meta")) // only call if its NOT a meta file
 						{
