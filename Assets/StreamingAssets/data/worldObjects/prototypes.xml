@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <prototypes>
 	<index author ="robotsrock171"/>
-	<prototype type="wall_0" moveRate="0.0" name="wall">
-		<variant type="wall_1" moveRate="0.0" name="wall"/>
+	<prototype type="wall_0" moveRate="0.0" baseType="wall">
+		<variant type="wall_1"/>
 	</prototype>
 </prototypes>

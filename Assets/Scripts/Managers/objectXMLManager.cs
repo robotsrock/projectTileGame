@@ -58,7 +58,7 @@ public class objectXMLManager : MonoBehaviour
 						if (!fileNames[i].Contains(".meta")) // only call if its NOT a meta file
 						{
 							xmlIndex index = getIndexData(fileNames[i]); // TODO use the index data for something useful
-							loadProtos(fileNames[i]);
+							loadXML(fileNames[i]);
 						}
 					}
 				}
@@ -73,19 +73,14 @@ public class objectXMLManager : MonoBehaviour
 			Debug.LogError("spriteManager::getIndexData: No <index> in " + filePath);
 			return null;
 		}
-		string author = reader.GetAttribute("author");
-
-		if (author == null)
-		{
-			Debug.LogError("spriteManager::getIndexData: Invalid index data in " + filePath);
-			return null;
-		}
+		string author = null;
+		author = xmlHelperManager.getStringRequired("author", reader);
 
 		xmlIndex tmpIndex = new xmlIndex();
 		tmpIndex.author = author;
 		return tmpIndex;
 	}
-	void loadProtos(string filePath)
+	void loadXML(string filePath)
 		// NOTE we assume that the name for the sprite sheet is the SAME as the name of the object
 	{
 		XmlTextReader reader = new XmlTextReader(filePath);
@@ -96,55 +91,58 @@ public class objectXMLManager : MonoBehaviour
 			Debug.LogError("objectXMLManager::loadProto: No <prototype> in " + filePath);
 			return;
 		}
-		else // TODO error check
+		else
 		{
-			worldObject proto = loadProtoFromXML(reader);
-			worldObjectProtos.Add(proto.objectType, proto);
-			while (reader.ReadToDescendant("variant"))
-			{
-				proto = loadProtoFromXML(reader);
-				worldObjectProtos.Add(proto.objectType, proto);
-			}
-		}
+			loadProto(reader);
+        }
 		while(reader.ReadToNextSibling("prototype"))
 		{
-			worldObject proto = loadProtoFromXML(reader);
-			worldObjectProtos.Add(proto.objectType, proto);
-			while (reader.ReadToDescendant("variant"))
-			{
-				string name;
-				proto = loadProtoFromXML(reader);
-				worldObjectProtos.Add(proto.objectType, proto);
-			}
-		}
+			loadProto(reader);
+        }		// TODO load other XML stuff in this function
 		return;
 	}
-	worldObject loadProtoFromXML(XmlTextReader reader)
+	worldObject loadProtoFromXML(XmlTextReader reader, worldObject parentObj)
 	{
-		string type = reader.GetAttribute("type");
-		string name = reader.GetAttribute("name");
-		float moveRate = float.Parse(reader.GetAttribute("moveRate"));
+		string type = null;
+		string baseType = null;
+		float moveRate = 1.0f;
 		int width = 1;// placeholder
 		int height = 1;
 
-		try
+		if (parentObj == null)
 		{
-			width = int.Parse(reader.GetAttribute("w"));
+			type = xmlHelperManager.getStringRequired("type", reader);
+			baseType = xmlHelperManager.getStringRequired("baseType", reader);
+			moveRate = xmlHelperManager.getFloatRequired("moveRate", reader);
+			width = xmlHelperManager.getIntDefault("w", 1, reader);
+			height = xmlHelperManager.getIntDefault("h", 1, reader);
 		}
-		catch
+		else
 		{
-			width = 1;
-		}
-		try
-		{
-			height = int.Parse(reader.GetAttribute("h"));
-		}
-		catch
-		{
-			height = 1;
+			type = xmlHelperManager.getStringRequired("type", reader);
+			baseType = parentObj.baseType;
+			moveRate = xmlHelperManager.getFloatDefault("moveRate", parentObj.movementCost, reader);
+			width = xmlHelperManager.getIntDefault("w", parentObj.width, reader);
+			height = xmlHelperManager.getIntDefault("h", parentObj.height, reader);
 		}
 
-		worldObject obj = worldObject.createPrototype(type, moveRate, width, height, name);
+		worldObject obj = worldObject.createPrototype(type, moveRate, width, height, baseType);
 		return obj;
+	}
+	void loadProto(XmlTextReader reader)
+	{
+		worldObject parentProto = loadProtoFromXML(reader, null);         // loads the first proto encountered
+		worldObjectProtos.Add(parentProto.objectType, parentProto);
+		if (reader.ReadToDescendant("variant"))                         // loads its variants
+		{
+			worldObject childProto = loadProtoFromXML(reader, parentProto);
+			worldObjectProtos.Add(childProto.objectType, childProto);
+			
+			while (reader.ReadToNextSibling("variant"))
+			{
+				childProto = loadProtoFromXML(reader, parentProto);
+				worldObjectProtos.Add(childProto.objectType, childProto);
+			}
+		}
 	}
 }

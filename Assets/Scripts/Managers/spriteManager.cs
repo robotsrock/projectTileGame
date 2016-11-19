@@ -88,27 +88,18 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 			Debug.LogError("spriteManager::getIndexData: No <index> in " + xmlPath);
 			return null;
 		}
-		string name = reader.GetAttribute("sheetName");
-		string author = reader.GetAttribute("author");
-		string pivot = "BL"; // placeholder
-		int pixelsPer = int.Parse(reader.GetAttribute("PPU"));
+		string name = null;
+		string author = null;
+		string pivot = null;
+		int pixelsPer = 0;
 		Vector2 point = new Vector2();
 
-		if (name == null || author == null)
-		{
-			Debug.LogError("spriteManager::getIndexData: Invalid index data in " + xmlPath);
-			return null;
-		}
-		try
-		{
-			pivot = reader.GetAttribute("pivot");
-		}
-		catch
-		{
-			pivot = "BL";
-		}
+		name = xmlHelperManager.getStringRequired("sheetName", reader);
+		author = xmlHelperManager.getStringRequired("author", reader);
+		pivot = xmlHelperManager.getStringDefault("pivot", "BL", reader);
+		pixelsPer = xmlHelperManager.getIntRequired("PPU", reader);
 
-		if (pivot == "C")
+		if (pivot == "C") // TODO support more pivots
 		{
 			point = new Vector2(0.5f, 0.5f);
 		}
@@ -179,27 +170,18 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 		// i believe it will be fine. It is not very noticeable at all.
 		// VERIFY that both AA and AO are off in ALL quality settings, this will keep the errors few and far between
 	{
-		string name = reader.GetAttribute("name");
-		int x = int.Parse(reader.GetAttribute("x")); // read the attributes, set the values
-		int y = int.Parse(reader.GetAttribute("y"));
+		string name = null;
+		int x = 0;
+		int y = 0;
 		int w = 0; // placeholder values, will get set in try-catch block
 		int h = 0;
-		try
-		{
-			w = int.Parse(reader.GetAttribute("w"));
-		}
-		catch
-		{
-			w = 64;
-		}
-		try
-		{
-			h = int.Parse(reader.GetAttribute("h"));
-		}
-		catch
-		{
-			h = 64;
-		}
+
+		name = xmlHelperManager.getStringRequired("name", reader);
+		x = xmlHelperManager.getIntRequired("x", reader);
+		y = xmlHelperManager.getIntRequired("y", reader);
+		w = xmlHelperManager.getIntDefault("w", 64, reader);
+		h = xmlHelperManager.getIntDefault("h", 64, reader);
+
 		outName = name;
 		Sprite sprite = Sprite.Create(imgText, new Rect(x, y, w, h), pivotPoint, PPU); // TODO remove the hardcoded PPU
 		sprite.texture.filterMode = FilterMode.Point;
