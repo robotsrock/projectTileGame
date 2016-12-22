@@ -5,16 +5,15 @@ using System;
 using UnityEngine.UI;
 using System.Xml;
 
-public class objectXMLManager : MonoBehaviour 
+public class tileXMLManager : MonoBehaviour 
 {
 	protected class xmlIndex
 	{
 		public string author;
 	}
+	static public tileXMLManager instance;
 
-	static public objectXMLManager instance;
-
-	public Dictionary<string, worldObject> worldObjectProtos { get; protected set; }
+	public Dictionary<string, tile> tileProtos { get; protected set; }
 
 	void Awake()
 	{
@@ -24,10 +23,10 @@ public class objectXMLManager : MonoBehaviour
 	}
 	void loadPrototypes()
 	{
-		worldObjectProtos = new Dictionary<string, worldObject>();
+		tileProtos = new Dictionary<string, tile>();
 
 		string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "data");
-		filePath = System.IO.Path.Combine(filePath, "worldObjects");
+		filePath = System.IO.Path.Combine(filePath, "tiles");
 		loadInDirs(filePath);
 	}
 	void loadInDirs(string filePath)
@@ -62,7 +61,7 @@ public class objectXMLManager : MonoBehaviour
 		XmlTextReader reader = new XmlTextReader(filePath);
 		if (!reader.ReadToDescendant("index"))
 		{
-			Debug.LogError("objectXMLManager::getIndexData: No <index> in " + filePath);
+			Debug.LogError("tileXMLManager::getIndexData: No <index> in " + filePath);
 			return null;
 		}
 		string author = null;
@@ -73,68 +72,62 @@ public class objectXMLManager : MonoBehaviour
 		return tmpIndex;
 	}
 	void loadXML(string filePath)
-		// NOTE name of the spritesheet is <name>
+	// NOTE name of the spritesheet is <name>
 	{
 		XmlTextReader reader = new XmlTextReader(filePath);
 		reader.ReadToDescendant("prototypes");
 		if (!reader.ReadToDescendant("prototype"))
 		{
 			// we have an empty file!
-			Debug.LogError("objectXMLManager::loadProto: No <prototype> in " + filePath);
+			Debug.LogError("tileXMLManager::loadProto: No <prototype> in " + filePath);
 			return;
 		}
 		else
 		{
 			loadProto(reader);
-        }
-		while(reader.ReadToNextSibling("prototype"))
+		}
+		while (reader.ReadToNextSibling("prototype"))
 		{
 			loadProto(reader);
-        }		// TODO load other XML stuff in this function
+		}       // TODO load other XML stuff in this function
 		return;
 	}
-	worldObject loadProtoFromXML(XmlTextReader reader, worldObject parentObj)
+	void loadProto(XmlTextReader reader)
+	{
+		tile parentProto = loadProtoFromXML(reader, null);         // loads the first proto encountered
+		tileProtos.Add(parentProto.tileType, parentProto);
+		if (reader.ReadToDescendant("variant"))                         // loads its variants
+		{
+			tile childProto = loadProtoFromXML(reader, parentProto);
+			tileProtos.Add(childProto.tileType, childProto);
+
+			while (reader.ReadToNextSibling("variant"))
+			{
+				childProto = loadProtoFromXML(reader, parentProto);
+				tileProtos.Add(childProto.tileType, childProto);
+			}
+		}
+	}
+	tile loadProtoFromXML(XmlTextReader reader, tile parentObj)
 	{
 		string type = null;
 		string baseType = null;
-		float moveRate = 1.0f;
-		int width = 1;// placeholder
-		int height = 1;
+		//float moveRate = 1.0f;
 
-		if (parentObj == null)
+		if (parentObj == null) // TODO implement moveRate
 		{
 			type = xmlHelperManager.getStringRequired("type", reader);
 			baseType = xmlHelperManager.getStringRequired("baseType", reader);
-			moveRate = xmlHelperManager.getFloatRequired("moveRate", reader);
-			width = xmlHelperManager.getIntDefault("w", 1, reader);
-			height = xmlHelperManager.getIntDefault("h", 1, reader);
+			//moveRate = xmlHelperManager.getFloatRequired("moveRate", reader);
 		}
 		else
 		{
 			type = xmlHelperManager.getStringRequired("type", reader);
 			baseType = parentObj.baseType;
-			moveRate = xmlHelperManager.getFloatDefault("moveRate", parentObj.movementCost, reader);
-			width = xmlHelperManager.getIntDefault("w", parentObj.width, reader);
-			height = xmlHelperManager.getIntDefault("h", parentObj.height, reader);
+			//moveRate = xmlHelperManager.getFloatDefault("moveRate", parentObj.movementCost, reader);
 		}
 
-		worldObject obj = worldObject.createPrototype(type, moveRate, width, height, baseType);
-		return obj;
-	}
-	void loadProto(XmlTextReader reader)
-	{
-		worldObject parentProto = loadProtoFromXML(reader, null);         // loads the first proto encountered
-		worldObjectProtos.Add(parentProto.objectType, parentProto);
-		if (reader.ReadToDescendant("variant"))                         // loads its variants
-		{
-			worldObject childProto = loadProtoFromXML(reader, parentProto);
-			worldObjectProtos.Add(childProto.objectType, childProto);
-			
-			while (reader.ReadToNextSibling("variant"))
-			{
-				childProto = loadProtoFromXML(reader, parentProto);
-				worldObjectProtos.Add(childProto.objectType, childProto);
-			}
-		}
+		tile t = tile.createPrototype(type, baseType);
+		return t;
 	}
 }

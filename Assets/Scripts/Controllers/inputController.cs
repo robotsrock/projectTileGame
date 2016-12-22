@@ -134,7 +134,7 @@ public class inputController : MonoBehaviour { // REFACTOR this should be split 
 					{
 						if (this.placeMode == 0) // we are in tile place mode
 						{
-							this.worldController.GetComponent<worldController>().firstWorld.setTileAt(x, y, "stone", 0);
+							this.worldController.GetComponent<worldController>().firstWorld.placeTile("stone_0", new Vector2(x, y));
 							// TODO we should get what kind of tile the user wants to place
 						}
 						else if (this.placeMode == 1) // we are in object place mode
@@ -220,8 +220,9 @@ public class inputController : MonoBehaviour { // REFACTOR this should be split 
 					{
 						if (this.placeMode == 0) // we are in tile delete mode
 						{
-							this.worldController.GetComponent<worldController>().firstWorld.setTileAt(x, y, "grass", 0);		// TODO use a break time system? 
-																																// or maybe only can break one at a time?
+							this.worldController.GetComponent<worldController>().firstWorld.placeTile("grass_1", new Vector2(x, y));     // TODO use a break time system? 
+																															// or maybe only can break one at a time?
+							//Debug.Log(this.worldController.GetComponent<worldController>().firstWorld.getTileAt(x, y).tileType);
 						}
 						else if (this.placeMode == 1)// we are in object delete mode
 						{

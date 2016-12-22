@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System;
 
 
-public class world // REFACTOR use properties
+public class world
 {
-	tile[,] worldTiles;
+	Dictionary<Vector2, tile> worldTiles;
 
 	public character mainCharacter { get; protected set; }
 
@@ -19,14 +19,15 @@ public class world // REFACTOR use properties
 	}
 	public void setupWorld(int worldWidth, int worldHeight)
 	{
-		this.worldTiles = new tile[worldWidth, worldHeight];
+		this.worldTiles = new Dictionary<Vector2, tile>();
 		this.mainCharacter = new character(new Vector2(5, 5), "Dave", 0.05f, this); // FIXME this should be loaded somewhere else, it should have easy to edit vars
 		for (int x = 0; x < worldWidth; x++)
 		{
 			for (int y = 0; y < worldHeight; y++)
 			{
-				this.worldTiles[x, y] = new tile("grass", 0, new Vector2(x, y), this);  // create a basic grass tile for all tiles (they wil be changed later)
-																						// TODO create a proper world generator, and call it here
+				tile t = new tile();
+				this.worldTiles.Add(new Vector2(x, y), t);
+				this.placeTile("grass_0", new Vector2(x, y));
 			}
 		}
 	}
@@ -34,10 +35,12 @@ public class world // REFACTOR use properties
 	{
 		if (x >= 0 && y >= 0)
 		{
-			return this.worldTiles[x, y];
+			Vector2 tmp = new Vector2(x, y);
+			return this.worldTiles[tmp];
 		}
 		else
 		{
+			Debug.Log(x + " " + y);
 			return null;
 		}
 	}
@@ -45,18 +48,25 @@ public class world // REFACTOR use properties
 	{
 		if (x >= 0 && y >= 0)
 		{
-			return this.worldTiles[x, y].childObject;
+			Vector2 tmp = new Vector2(x, y);
+			return this.worldTiles[tmp].childObject;
 		}
 		else
 		{
 			return null;
 		}
 	}
-	public void setTileAt(int x, int y, string type, int variant)
+	public tile placeTile(string tileType, Vector2 pos)
 	{
-		if (x >= 0 && y >= 0)
+		if (tileXMLManager.instance.tileProtos.ContainsKey(tileType))
 		{
-			this.worldTiles[x, y].setTile(type, variant);
+			tile t = tile.placeInstance(tileXMLManager.instance.tileProtos[tileType], pos, this);
+			return t;
+		}
+		else
+		{
+			Debug.LogError("No tile prototype of type: " + tileType);
+			return null;
 		}
 	}
 	public void placeWorldObject (string objectType, tile t)
@@ -76,7 +86,7 @@ public class world // REFACTOR use properties
 		}
 		else
 		{
-			Debug.Log("world::placeWorldOject: No object of type " + objectType);
+			Debug.LogError("world::placeWorldOject: No object of type " + objectType);
 		}
 		this.updateAdjacentTiles(t); // update the adjacent tiles
 	}

@@ -55,30 +55,21 @@ public class spriteManager : MonoBehaviour // sprite magaer loads sprite(sheets)
 		else
 		{
 			string[] fileNames = System.IO.Directory.GetFiles(filePath);
-			if(fileNames.Length == 0)
+			for (int i = 0; i < fileNames.Length; i++)
 			{
-				// No files in the directory, just return
-				Debug.Log("spriteManager::loadInDirs: No files in " + filePath); // FIXME meta files are evil
-				return;
-			}
-			else
-			{
-				for (int i = 0; i < fileNames.Length; i++)
+				if (fileNames[i].Contains(".png")) // we only want to load .png files
+													// NOTE this will load any file that contains .png, not just ones that have it at the end
 				{
-					if (fileNames[i].Contains(".png")) // we only want to load .png files
-													   // NOTE this will load any file that contains .png, not just ones that have it at the end
+					if (!fileNames[i].Contains(".meta")) // only call if its NOT a meta file
 					{
-						if (!fileNames[i].Contains(".meta")) // only call if its NOT a meta file
-						{
-							sheetIndex index = getIndexData(fileNames[i]);
-							this.spriteSheets.Add(index.sheetName, loadSpriteSheet(fileNames[i]));
-						}
+						sheetIndex index = getIndexData(fileNames[i]);
+						this.spriteSheets.Add(index.sheetName, loadSpriteSheet(fileNames[i]));
 					}
 				}
 			}
 		}
 	}
-	sheetIndex getIndexData(string filePath) // gets date from <index>
+	sheetIndex getIndexData(string filePath) // gets data from <index>
 	{
 		string baseSpritePath = System.IO.Path.GetFileNameWithoutExtension(filePath);
 		string xmlPath = System.IO.Path.Combine(System.IO.Directory.GetParent(filePath).FullName, baseSpritePath + ".xml"); // NOTE the xml extension must be in LOWER CASE 

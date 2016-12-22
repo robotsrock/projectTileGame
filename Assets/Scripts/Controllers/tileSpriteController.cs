@@ -23,7 +23,7 @@ public class tileSpriteController : MonoBehaviour
 		tileGO.transform.SetParent(this.transform);
 		tileGO.transform.position = new Vector3(x, y, 0);
 		SpriteRenderer tileSR = tileGO.gameObject.AddComponent<SpriteRenderer>();
-		tileSR.sprite = spriteManager.instance.getSprite(t.tileBase, t.tileBase + "_" + t.tileVariant + "_0"); // FIXME hardcoded flag, flags not implemented
+		tileSR.sprite = spriteManager.instance.getSprite(t.baseType, t.tileType + "_0");
 
 		tileToGO.Add(t, tileGO);
 
@@ -33,7 +33,7 @@ public class tileSpriteController : MonoBehaviour
 	//?+ callbacks
 	public void onTileChanged(tile t, GameObject tileGO) // when a tile changes type or variant, we update the sprite
 	{
-		tileGO.GetComponent<SpriteRenderer>().sprite = spriteManager.instance.getSprite(t.tileBase, t.tileBase + "_" + t.tileVariant + "_0");
+		tileGO.GetComponent<SpriteRenderer>().sprite = spriteManager.instance.getSprite(t.baseType, t.tileType + "_0");
 	}
 
 }

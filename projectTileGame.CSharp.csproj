@@ -86,11 +86,13 @@
     <Compile Include="Assets\Scripts\Managers\xmlHelperManager.cs" />
     <Compile Include="Assets\Scripts\Not Mine\SimplePool.cs" />
     <Compile Include="Assets\Scripts\Scripts\lookPoint.cs" />
+    <Compile Include="Assets\Scripts\Managers\tileXMLManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\StreamingAssets\data\worldObjects\prototypes.xml">
+    <None Include="Assets\StreamingAssets\data\tiles\tileprototypes.xml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Assets\StreamingAssets\data\worldObjects\prototypes.xml" />
     <None Include="Assets\StreamingAssets\sprites\characters\robot.xml" />
     <None Include="Assets\StreamingAssets\sprites\misc\misc.xml" />
     <None Include="Assets\StreamingAssets\sprites\tiles\grass.xml" />

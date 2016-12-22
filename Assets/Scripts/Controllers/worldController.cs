@@ -9,7 +9,7 @@ public class tileSpriteSet // each has a set of sprites for that tile, 0 is an e
 }
 
 
-public class worldController : MonoBehaviour // REFACTOR we need to use a list for GOs
+public class worldController : MonoBehaviour
 {
 	[Header("Variables")]
 	public int worldWidth = 10;

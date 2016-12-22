@@ -2,4 +2,5 @@
 <sprites>
 	<index sheetName="grass" author="robotsrock171" PPU="64"/>
 	<sprite name="grass_0_0"  x="0"  y="0"/>
+	<sprite name="grass_1_0"  x="65"  y="0"/>
 </sprites>

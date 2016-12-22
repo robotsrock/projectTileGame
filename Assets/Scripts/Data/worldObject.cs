@@ -7,7 +7,7 @@ public class worldObject
 	// TODO implement rotation
 	// TODO implement larger objects
 	public string objectType { get; protected set; }
-	public string name { get; protected set; }			// localised name
+	public string locName { get; protected set; }			// localised name
 	public string baseType { get; protected set; }
 	public float movementCost { get; protected set; }
 	public tile baseTile { get; protected set; }
@@ -21,7 +21,7 @@ public class worldObject
 	{
 	}
 
-	public static worldObject createPrototype(string objectType, float movementCost, int width, int height, string baseType) // TODO implement w & h
+	public static worldObject createPrototype(string objectType, float movementCost, int width, int height, string baseType) // TODO implement w & h && locName
 	{
 		worldObject obj = new worldObject();
 
@@ -46,7 +46,7 @@ public class worldObject
 		obj.baseTile = baseTile;
 		obj.flags = 0;
 
-		// FIXME maybe we can have multiple tile objects?
+		// TODO maybe we can have multiple tile objects?
 		if (!baseTile.placeObject(obj))
 		{
 			// the placement failed
