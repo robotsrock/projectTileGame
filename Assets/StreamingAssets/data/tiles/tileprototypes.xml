@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<prototypes>
+	<index author ="robotsrock171"/>
+	
+	<prototype type="grass_0" baseType="grass">
+		<variant type="grass_1"/>
+	</prototype>
+	
+	<prototype type ="stone_0" baseType="stone">
+	</prototype>
+</prototypes>

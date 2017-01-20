@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sprites>
+	<index sheetName="misc" author="robotsrock171" PPU="64"/>
+	<sprite name="select_0"  x="0"  y="0"/>
+	<sprite name="delete_0"  x="0"  y="64"/>
+</sprites>

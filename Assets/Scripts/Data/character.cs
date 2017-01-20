@@ -2,14 +2,15 @@
 using System.Collections;
 using System;
 
-public class character
+public class character // REFACTOR use properties
 {
-	Vector2 position;
-	string name;
-	float moveSpeed;
+	public Vector2 position { get; protected set; }
+	public string name { get; protected set; }
+	public float moveSpeed { get; protected set; }
+
 	Action<character> onMoveCB;
 
-	public character(Vector2 position, string name, float moveSpeed)
+	public character(Vector2 position, string name, float moveSpeed, world theWorld)
 	{
 		this.position = position;
 		this.name = name;
@@ -24,10 +25,6 @@ public class character
 			this.onMoveCB(this);
 		}
     }
-	public Vector2 getPosition()
-	{
-		return this.position;
-	}
 	public void registerMoveCallback(Action<character> callback)
 	{
 		onMoveCB += callback;
@@ -35,9 +32,5 @@ public class character
 	public void unRegisterMoveCallback(Action<character> callback)
 	{
 		onMoveCB -= callback;
-	}
-	public string getName()
-	{
-		return this.name;
 	}
 }
